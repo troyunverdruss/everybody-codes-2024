@@ -3,10 +3,8 @@ package dev.yort
 object Day01 {
     fun part1() {
         val totalCost =
-            this::class.java
-                .getResource("/inputs/d01.1.txt")!!
-                .readText()
-                .split("\n")
+            Resources
+                .lines("d01.1.txt")
                 .first()
                 .mapNotNull { potionCost(it) }
                 .sum()
@@ -15,25 +13,35 @@ object Day01 {
 
     fun part2() {
         val totalCost =
-            this::class.java
-                .getResource("/inputs/d01.2.txt")!!
-                .readText()
-                .split("\n")
+            Resources
+                .lines("d01.2.txt")
                 .first()
                 .asIterable()
                 .windowed(2, step = 2)
-                .map { potionCostForPair(it) }
-                .also { println(it) }
-                .sum()
+                .sumOf { potionCostForGroup(it) }
         println(totalCost)
     }
 
-    fun potionCostForPair(creatures: List<Char>): Int {
+    fun part3() {
+        val totalCost =
+            Resources
+                .lines("d01.3.txt")
+                .first()
+                .asIterable()
+                .windowed(3, step = 3)
+                .sumOf { potionCostForGroup(it) }
+        println(totalCost)
+    }
+
+    fun potionCostForGroup(creatures: List<Char>): Int {
         val costs = creatures.map { potionCost(it) }
-        return if (costs.contains(null)) {
-            costs.filterNotNull().sum()
-        } else {
-            costs.filterNotNull().sum() + 2
+        val creatureCount = costs.count { it != null }
+        return when (creatureCount) {
+            3 -> costs.filterNotNull().sum() + 6
+            2 -> costs.filterNotNull().sum() + 2
+            1 -> costs.filterNotNull().sum()
+            0 -> 0
+            else -> error("Invalid creature count $creatures")
         }
     }
 
