@@ -8,7 +8,7 @@ class Day01Test {
     fun testPart2() {
         assertEquals(
             5,
-            Day01.potionCostForPair(listOf('x', 'D')),
+            Day01.potionCostForGroup(listOf('x', 'D')),
         )
     }
 }
